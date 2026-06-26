@@ -2,10 +2,11 @@ import "./styles.css";
 
 import { getWeatherConditions } from "./weatherAPI.js";
 import { updateDisplay } from "./display.js";
-import { updateTemperature } from "./temperature.js";
 
 const searchBar = document.getElementById("search-bar");
 const searchBtn = document.getElementById("search");
+
+let currentConditions = null;
 
 function getCity() {
     const inputValue = searchBar.value.trim().replace(/\s+/g, "-");
@@ -17,9 +18,8 @@ function getCity() {
 }
 
 searchBtn.addEventListener("click", async () => {
-    const conditions = await getWeatherConditions(getCity());
-    updateDisplay(conditions, celciusOption);
-
+    currentConditions = await getWeatherConditions(getCity());
+    updateDisplay(currentConditions, celciusOption);
 })
 
 const celciusOption = document.querySelector(".celcius");
@@ -37,5 +37,5 @@ tempBox.addEventListener("click", () => {
         celciusOption.classList.add("chosen-temp")
     }
 
-    updateTemperature(celciusOption)
+    if (currentConditions) updateDisplay(currentConditions, celciusOption);
 })
